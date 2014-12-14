@@ -35,11 +35,6 @@ public class Expression {
         return expression;
     }
 
-    public boolean isInAUC(int x, int y){
-        return evaluate(x) > y;
-    }
-
-
     @Override
     public String toString() {
         StringBuilder builder=new StringBuilder();
