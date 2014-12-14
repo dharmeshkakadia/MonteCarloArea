@@ -12,18 +12,23 @@ import java.util.List;
 
 public class MonteCarloScheduler implements Scheduler {
     private LinkedList<String> tasks;
-    private int taskCounter;
+    private int numTasks;
+    private int tasksSubmitted;
+    private int tasksCompleted;
     private double totalArea;
 
     public MonteCarloScheduler(String[] args, int numTasks){
+        this.numTasks=numTasks;
         tasks=new LinkedList<String>();
-        double  xLow=Double.parseDouble(args[1]);
-        double  xHigh=Double.parseDouble(args[2]);
-        double  yLow=Double.parseDouble(args[3]);
-        double  yHigh=Double.parseDouble(args[4]);
-        for (double x=xLow;x<xHigh;x+=(xHigh-xLow)/(numTasks/2)){
-            for (double y=yLow;y<yHigh;y+=(yHigh-yLow)/(numTasks/2)) {
-                tasks.add(" \" "+args[0]+" \" "+x+" "+(x+(xHigh-xLow)/(numTasks/2))+" "+y+" "+(y+(yHigh-yLow)/(numTasks/2))+" "+args[5]);
+        double xLow=Double.parseDouble(args[1]);
+        double xHigh=Double.parseDouble(args[2]);
+        double yLow=Double.parseDouble(args[3]);
+        double yHigh=Double.parseDouble(args[4]);
+        double xStep=(xHigh-xLow)/(numTasks/2);
+        double yStep=(yHigh-yLow)/(numTasks/2);
+        for (double x=xLow;x<xHigh;x+=xStep){
+            for (double y=yLow;y<yHigh;y+=yStep) {
+                tasks.add(" \" "+args[0]+" \" "+x+" "+(x+xStep)+" "+y+" "+(y+ yStep)+" "+args[5]);
             }
         }
     }
@@ -42,12 +47,12 @@ public class MonteCarloScheduler implements Scheduler {
     public void resourceOffers(SchedulerDriver schedulerDriver, List<Protos.Offer> offers) {
         for (Protos.Offer offer : offers) {
             if(tasks.size()>0) {
-                taskCounter++;
+                tasksSubmitted++;
                 String task = tasks.remove();
-                Protos.TaskID taskID = Protos.TaskID.newBuilder().setValue(String.valueOf(taskCounter)).build();
-                System.out.println("Launching task " + taskID.getValue()+" with "+task);
+                Protos.TaskID taskID = Protos.TaskID.newBuilder().setValue(String.valueOf(tasksSubmitted)).build();
+                System.out.println("Launching task " + taskID.getValue()+" on slave "+offer.getSlaveId().getValue()+" with "+task);
                 Protos.ExecutorInfo executor = Protos.ExecutorInfo.newBuilder()
-                        .setExecutorId(Protos.ExecutorID.newBuilder().setValue(String.valueOf(taskCounter)))
+                        .setExecutorId(Protos.ExecutorID.newBuilder().setValue(String.valueOf(tasksSubmitted)))
                         .setCommand(createCommand(task))
                         .setName("MonteCarlo Executor (Java)")
                         .setSource("java_test")
@@ -75,7 +80,7 @@ public class MonteCarloScheduler implements Scheduler {
     }
 
     private Protos.CommandInfo.Builder createCommand(String args){
-        return Protos.CommandInfo.newBuilder().setValue(" java -cp /vagrant/MonteCarloArea.jar:/usr/share/java/mesos-0.20.1-shaded-protobuf.jar:/vagrant/protobuf-java-2.5.0.jar  -Djava.library.path=/usr/local/lib org.packt.mesos.MonteCarloExecutor "+args);
+        return Protos.CommandInfo.newBuilder().setValue("java -cp /vagrant/MonteCarloArea.jar:/usr/share/java/mesos-0.20.1-shaded-protobuf.jar:/vagrant/protobuf-java-2.5.0.jar  -Djava.library.path=/usr/local/lib org.packt.mesos.MonteCarloExecutor "+args);
     }
 
     @Override
@@ -87,15 +92,16 @@ public class MonteCarloScheduler implements Scheduler {
     public void statusUpdate(SchedulerDriver schedulerDriver, Protos.TaskStatus taskStatus) {
         System.out.println("Status update: task "+taskStatus.getTaskId().getValue()+" state is "+taskStatus.getState());
         if (taskStatus.getState().equals(Protos.TaskState.TASK_FINISHED)){
+            tasksCompleted++;
             double area = Double.parseDouble(taskStatus.getData().toStringUtf8());
             totalArea+=area;
             System.out.println("Task "+taskStatus.getTaskId().getValue()+" finished with area : "+area);
-            if(tasks.size()==0){
-                System.out.println("Total Area : "+totalArea);
-                schedulerDriver.stop();
-            }
         } else {
             System.out.println("Task "+taskStatus.getTaskId().getValue()+" has message "+taskStatus.getMessage());
+        }
+        if(tasksCompleted==numTasks){
+            System.out.println("Total Area : "+totalArea);
+            schedulerDriver.stop();
         }
     }
 
