@@ -89,9 +89,9 @@ public class MonteCarloScheduler implements Scheduler {
         if (taskStatus.getState().equals(Protos.TaskState.TASK_FINISHED)){
             double area = Double.parseDouble(taskStatus.getData().toStringUtf8());
             totalArea+=area;
-            System.out.println("Task "+taskStatus.getTaskId().getValue()+" finished "+area);
+            System.out.println("Task "+taskStatus.getTaskId().getValue()+" finished with area : "+area);
             if(tasks.size()==0){
-                System.out.println(totalArea);
+                System.out.println("Total Area : "+totalArea);
                 schedulerDriver.stop();
             }
         } else {
@@ -126,6 +126,10 @@ public class MonteCarloScheduler implements Scheduler {
 
 
     public static void main(String[] args) {
+        if(args.length<8){
+            System.err.println("Usage: MonteCarloScheduler <Master URI>  <Number of Tasks> <Curve Expression> <xLow> <xHigh> <yLow> <yHigh> <Number of Points>");
+            System.exit(-1);
+        }
         System.out.println("Starting the MonteCarloArea on Mesos with master "+args[0]);
         Protos.FrameworkInfo frameworkInfo = Protos.FrameworkInfo.newBuilder()
                                                      .setName("MonteCarloArea")
