@@ -1,11 +1,9 @@
 package org.packt.mesos;
 
-import org.apache.mesos.MesosSchedulerDriver;
 import org.apache.mesos.Protos;
 import org.apache.mesos.Scheduler;
 import org.apache.mesos.SchedulerDriver;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -55,7 +53,6 @@ public class MonteCarloScheduler implements Scheduler {
                         .setExecutorId(Protos.ExecutorID.newBuilder().setValue(String.valueOf(tasksSubmitted)))
                         .setCommand(createCommand(task))
                         .setName("MonteCarlo Executor (Java)")
-                        .setSource("java_test")
                         .build();
 
                 Protos.TaskInfo taskInfo = Protos.TaskInfo.newBuilder()
@@ -128,20 +125,5 @@ public class MonteCarloScheduler implements Scheduler {
     @Override
     public void error(SchedulerDriver schedulerDriver, String message) {
         System.err.println("Error : "+message);
-    }
-
-
-    public static void main(String[] args) {
-        if(args.length<8){
-            System.err.println("Usage: MonteCarloScheduler <Master URI>  <Number of Tasks> <Curve Expression> <xLow> <xHigh> <yLow> <yHigh> <Number of Points>");
-            System.exit(-1);
-        }
-        System.out.println("Starting the MonteCarloArea on Mesos with master "+args[0]);
-        Protos.FrameworkInfo frameworkInfo = Protos.FrameworkInfo.newBuilder()
-                                                     .setName("MonteCarloArea")
-                                                     .setUser("")
-                                                     .build();
-        MesosSchedulerDriver schedulerDriver = new MesosSchedulerDriver(new MonteCarloScheduler(Arrays.copyOfRange(args,2,args.length),Integer.parseInt(args[1])),frameworkInfo,args[0]);
-        schedulerDriver.run();
     }
 }
