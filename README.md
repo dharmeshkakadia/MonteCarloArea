@@ -23,4 +23,7 @@ To try the framework with [docker compose](https://www.docker.com/docker-compose
     ```shell
     docker exec  montecarloarea_marathon_1 bash -c "java -cp /tmp/data/MonteCarloArea.jar:/usr/share/java/* org.packt.mesos.App zk://zk:2181/mesos 4  x 0 10 0 10 10" 
     ```
-
+5. You can stop the Mesos cluster, using
+   ```shell
+   docker-compose stop
+   ```
