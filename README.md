@@ -9,7 +9,7 @@ To try the framework with [docker compose](https://www.docker.com/docker-compose
     git clone https://github.com/dharmeshkakadia/MonteCarloArea/ && cd MonteCarloArea
     ```
 
-2. Lets create a Mesos + Marathon cluster using Mesosphere docker images:
+2. Lets create a Mesos + Marathon cluster using Mesosphere docker images. Mesos web interface will be available at [http://localhost:5050](http://localhost:5050) and Marathon web interface will be avilable at [http://localhost:8080](http://localhost:8080). (If you are using boot2docker substitute the ip of the docker VM)
     ```shell
     docker-compose up -d
     ```
