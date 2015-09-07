@@ -77,7 +77,7 @@ public class MonteCarloScheduler implements Scheduler {
     }
 
     private Protos.CommandInfo.Builder createCommand(String args){
-        return Protos.CommandInfo.newBuilder().setValue("java -cp /vagrant/MonteCarloArea.jar:/usr/share/java/mesos-0.20.1-shaded-protobuf.jar:/vagrant/protobuf-java-2.5.0.jar  -Djava.library.path=/usr/local/lib org.packt.mesos.MonteCarloExecutor "+args);
+        return Protos.CommandInfo.newBuilder().setValue("java -cp /tmp/data/MonteCarloArea.jar:/usr/share/java/* org.packt.mesos.MonteCarloExecutor "+args);
     }
 
     @Override
