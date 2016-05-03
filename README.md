@@ -16,12 +16,12 @@ To try the framework with [docker compose](https://www.docker.com/docker-compose
 
 3. Now lets compile our code and create jar. Note that the ``src`` directory is sharted under ``/tmp/data`` in all the containers.
     ```shell
-    docker exec  montecarloarea_marathon_1 bash -c "javac -cp \"/usr/share/java/*\" /tmp/data/org/packt/mesos/*.java && cd /tmp/data/; jar -cvf /tmp/data/MonteCarloArea.jar  org/packt/mesos/*"
+    docker exec  montecarloarea_marathon_1 bash -c "javac -cp /usr/share/java/mesos-0.23.0-shaded-protobuf.jar /tmp/data/org/packt/mesos/*.java && cd /tmp/data/; jar -cvf /tmp/data/MonteCarloArea.jar  org/packt/mesos/*"
     ```
 
 4. Now lets run it !
     ```shell
-    docker exec  montecarloarea_marathon_1 bash -c "java -cp /tmp/data/MonteCarloArea.jar:/usr/share/java/* org.packt.mesos.App zk://zk:2181/mesos 4  x 0 10 0 10 10" 
+    docker exec  montecarloarea_marathon_1 bash -c "java -cp /tmp/data/MonteCarloArea.jar:/usr/share/java/mesos-0.23.0-shaded-protobuf.jar org.packt.mesos.App zk://zk:2181/mesos 4  x 0 10 0 10 10" 
     ```
 
 5. You can stop the Mesos cluster, using
