@@ -31,17 +31,14 @@ public class MonteCarloScheduler implements Scheduler {
         }
     }
 
-    @Override
     public void registered(SchedulerDriver schedulerDriver, Protos.FrameworkID frameworkID, Protos.MasterInfo masterInfo) {
         System.out.println("Scheduler registered with id " + frameworkID.getValue());
     }
 
-    @Override
     public void reregistered(SchedulerDriver schedulerDriver, Protos.MasterInfo masterInfo) {
         System.out.println("Scheduler re-registered");
     }
 
-    @Override
     public void resourceOffers(SchedulerDriver schedulerDriver, List<Protos.Offer> offers) {
         for (Protos.Offer offer : offers) {
             if(tasks.size()>0) {
@@ -77,15 +74,13 @@ public class MonteCarloScheduler implements Scheduler {
     }
 
     private Protos.CommandInfo.Builder createCommand(String args){
-        return Protos.CommandInfo.newBuilder().setValue("java -cp /tmp/data/MonteCarloArea.jar:/usr/share/java/* org.packt.mesos.MonteCarloExecutor "+args);
+        return Protos.CommandInfo.newBuilder().setValue("java -cp $JAR_PATH org.packt.mesos.MonteCarloExecutor "+args);
     }
 
-    @Override
     public void offerRescinded(SchedulerDriver schedulerDriver, Protos.OfferID offerID) {
 
     }
 
-    @Override
     public void statusUpdate(SchedulerDriver schedulerDriver, Protos.TaskStatus taskStatus) {
         System.out.println("Status update: task "+taskStatus.getTaskId().getValue()+" state is "+taskStatus.getState());
         if (taskStatus.getState().equals(Protos.TaskState.TASK_FINISHED)){
@@ -102,27 +97,22 @@ public class MonteCarloScheduler implements Scheduler {
         }
     }
 
-    @Override
     public void frameworkMessage(SchedulerDriver schedulerDriver, Protos.ExecutorID executorID, Protos.SlaveID slaveID, byte[] bytes) {
 
     }
 
-    @Override
     public void disconnected(SchedulerDriver schedulerDriver) {
 
     }
 
-    @Override
     public void slaveLost(SchedulerDriver schedulerDriver, Protos.SlaveID slaveID) {
 
     }
 
-    @Override
     public void executorLost(SchedulerDriver schedulerDriver, Protos.ExecutorID executorID, Protos.SlaveID slaveID, int i) {
 
     }
 
-    @Override
     public void error(SchedulerDriver schedulerDriver, String message) {
         System.err.println("Error : "+message);
     }

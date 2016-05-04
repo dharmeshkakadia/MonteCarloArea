@@ -1,41 +1,30 @@
 zk:
-    image: mesosphere/mesos:0.23.0-1.0.ubuntu1404
+    image: mesosphere/mesos:0.28.1-2.0.20.ubuntu1404
     command: /usr/share/zookeeper/bin/zkServer.sh start-foreground
 master:
-    image: mesosphere/mesos-master:0.23.0-1.0.ubuntu1404
+    image: mesosphere/mesos-master:0.28.1-2.0.20.ubuntu1404
     environment:
         - MESOS_ZK=zk://zk:2181/mesos
         - MESOS_LOG_DIR=/var/log/mesos
         - MESOS_QUORUM=1
         - MESOS_WORK_DIR=/var/lib/mesos
+        - JAR_PATH=/tmp/bin/MonteCarloArea-1.0-SNAPSHOT.jar
     links:
         - "zk:zk"
     ports:
         - "5050:5050"
     volumes:
-        - ./src/main/java:/tmp/data
+        - ./target:/tmp/bin
 slave:
-    image: mesosphere/mesos-slave:0.23.0-1.0.ubuntu1404
+    image: mesosphere/mesos-slave:0.28.1-2.0.20.ubuntu1404
     environment:
         - MESOS_MASTER=zk://zk:2181/mesos
         - MESOS_LOG_DIR=/var/log/mesos
         - MESOS_LOGGING_LEVEL=INFO
+        - MESOS_LAUNCHER=posix
+        - JAR_PATH=/tmp/bin/MonteCarloArea-1.0-SNAPSHOT.jar
     links:
         - "zk:zk"
         - "master:master"
     volumes:
-        - ./src/main/java:/tmp/data
-
-marathon:
-    image: mesosphere/marathon:v0.10.0
-    environment:
-        - MARATHON_MASTER=zk://zk:2181/mesos
-        - MARATHON_ZK=zk://zk:2181/marathon
-    ports:
-        - "8080:8080"
-    links:
-        - "zk:zk"
-        - "master:master"
-    volumes:
-        - ./src/main/java:/tmp/data
-
+        - ./target:/tmp/bin

@@ -1,5 +1,5 @@
 # MonteCarloArea
-Example framework used in [Apache Mesos Essentials book](http://dharmeshkakadia.blogspot.com/2015/06/apache-mesos-essential-is-now-available.html)
+Example framework used in [Apache Mesos Essentials book](http://dharmeshkakadia.blogspot.com/2015/06/apache-mesos-essential-is-now-available.html). Current master of this repo uses latest version of Mesos. If you want to see the version used in the book, look at [branch-0.23](https://github.com/dharmeshkakadia/MonteCarloArea/tree/0.23-book).
 
 ## Run with docker-compose
 To try the framework with [docker compose](https://www.docker.com/docker-compose) use the following steps after installing docker-compose: 
@@ -9,19 +9,18 @@ To try the framework with [docker compose](https://www.docker.com/docker-compose
     git clone https://github.com/dharmeshkakadia/MonteCarloArea/ && cd MonteCarloArea
     ```
 
-2. Lets create a Mesos + Marathon cluster using Mesosphere docker images. Mesos web interface will be available at [http://localhost:5050](http://localhost:5050) and Marathon web interface will be avilable at [http://localhost:8080](http://localhost:8080). (If you are using boot2docker substitute the ip of the docker VM)
+2. Compile our code and create a jar.
+    ```shell
+    mvn package
+    ```
+3. Lets create a Mesos cluster using Mesosphere docker images. Mesos web interface will be available at [http://localhost:5050](http://localhost:5050). (If you are using boot2docker substitute the IP of the docker VM). Note that the ``target`` directory from the project root is mounted under ``/tmp/bin`` in all Mesos master and slave containers.
     ```shell
     docker-compose up -d
     ```
 
-3. Now lets compile our code and create jar. Note that the ``src`` directory is sharted under ``/tmp/data`` in all the containers.
+4. Now lets run it ! You should see the area calculated in the output.
     ```shell
-    docker exec  montecarloarea_marathon_1 bash -c "javac -cp \"/usr/share/java/*\" /tmp/data/org/packt/mesos/*.java && cd /tmp/data/; jar -cvf /tmp/data/MonteCarloArea.jar  org/packt/mesos/*"
-    ```
-
-4. Now lets run it !
-    ```shell
-    docker exec  montecarloarea_marathon_1 bash -c "java -cp /tmp/data/MonteCarloArea.jar:/usr/share/java/* org.packt.mesos.App zk://zk:2181/mesos 4  x 0 10 0 10 10" 
+    docker exec  montecarloarea_master_1 bash -c "java -cp /tmp/data/MonteCarloArea-1.0-SNAPSHOT.jar org.packt.mesos.App zk://zk:2181/mesos 4  x 0 10 0 10 10"
     ```
 
 5. You can stop the Mesos cluster, using

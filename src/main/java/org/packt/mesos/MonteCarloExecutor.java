@@ -4,7 +4,7 @@ import org.apache.mesos.Executor;
 import org.apache.mesos.ExecutorDriver;
 import org.apache.mesos.MesosExecutorDriver;
 import org.apache.mesos.Protos;
-import org.apache.mesos.protobuf.ByteString;
+import com.google.protobuf.ByteString;
 
 public class MonteCarloExecutor implements Executor{
     Expression expression;
@@ -23,22 +23,18 @@ public class MonteCarloExecutor implements Executor{
         this.n=n;
     }
 
-    @Override
     public void registered(ExecutorDriver executorDriver, Protos.ExecutorInfo executorInfo, Protos.FrameworkInfo frameworkInfo, Protos.SlaveInfo slaveInfo) {
         System.out.println("Registered an executor on slave " + slaveInfo.getHostname());
 }
 
-    @Override
     public void reregistered(ExecutorDriver executorDriver, Protos.SlaveInfo slaveInfo) {
         System.out.println("Re-Registered an executor on slave " + slaveInfo.getHostname());
     }
 
-    @Override
     public void disconnected(ExecutorDriver executorDriver) {
         System.out.println("Re-Disconnected the executor on slave");
     }
 
-    @Override
     public void launchTask(final ExecutorDriver executorDriver, final Protos.TaskInfo taskInfo) {
         System.out.println("Launching task "+taskInfo.getTaskId().getValue());
         Thread thread = new Thread() {
@@ -78,21 +74,17 @@ public class MonteCarloExecutor implements Executor{
         thread.start();
     }
 
-    @Override
     public void killTask(ExecutorDriver executorDriver, Protos.TaskID taskID) {
         System.out.println("Killing task " + taskID);
     }
 
-    @Override
     public void frameworkMessage(ExecutorDriver executorDriver, byte[] bytes) {
     }
 
-    @Override
     public void shutdown(ExecutorDriver executorDriver) {
         System.out.println("Shutting down the executor");
     }
 
-    @Override
     public void error(ExecutorDriver executorDriver, String s) {
 
     }
