@@ -20,7 +20,7 @@ To try the framework with [docker compose](https://www.docker.com/docker-compose
 
 4. Now lets run it ! You should see the area calculated in the output.
     ```shell
-    docker exec  montecarloarea_master_1 bash -c "java -cp /tmp/data/MonteCarloArea-1.0-SNAPSHOT.jar org.packt.mesos.App zk://zk:2181/mesos 4  x 0 10 0 10 10"
+    docker exec  montecarloarea_master_1 bash -c "java -cp /tmp/bin/MonteCarloArea-1.0-SNAPSHOT.jar org.packt.mesos.App zk://zk:2181/mesos 4  x 0 10 0 10 1000"
     ```
 
 5. You can stop the Mesos cluster, using
