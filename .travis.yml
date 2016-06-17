@@ -6,4 +6,4 @@ services:
   - docker
 
 script:
-mvn package && docker-compose up -d && docker exec  montecarloarea_master_1 bash -c "java -cp /tmp/bin/MonteCarloArea-1.0-SNAPSHOT.jar org.packt.mesos.App zk://zk:2181/mesos 4  x 0 10 0 10 1000"
+  - mvn package && docker-compose up -d && docker exec  montecarloarea_master_1 bash -c "java -cp /tmp/bin/MonteCarloArea-1.0-SNAPSHOT.jar org.packt.mesos.App zk://zk:2181/mesos 4  x 0 10 0 10 1000"
