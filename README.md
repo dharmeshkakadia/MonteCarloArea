@@ -4,7 +4,7 @@ Example framework used in [Apache Mesos Essentials book](http://dharmeshkakadia.
 ## Run with docker-compose
 To try the framework with [docker compose](https://www.docker.com/docker-compose) use the following steps after installing docker-compose: 
 
-[![asciicast](https://asciinema.org/a/bc55iq91i7emlowx3j77280fo.png)](https://asciinema.org/a/bc55iq91i7emlowx3j77280fo)
+[![asciicast](https://asciinema.org/a/bc55iq91i7emlowx3j77280fo.png)](https://asciinema.org/a/bc55iq91i7emlowx3j77280fo?autoplay=1)
 
 1. Clone this repo using
     ```shell
