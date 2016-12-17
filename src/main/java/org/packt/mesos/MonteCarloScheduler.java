@@ -14,8 +14,9 @@ public class MonteCarloScheduler implements Scheduler {
     private int tasksSubmitted;
     private int tasksCompleted;
     private double totalArea;
+    private String JAR_PATH;
 
-    public MonteCarloScheduler(String[] args, int numTasks){
+    public MonteCarloScheduler(String[] args, int numTasks, String JAR_PATH){
         this.numTasks=numTasks;
         tasks=new LinkedList<String>();
         double xLow=Double.parseDouble(args[1]);
@@ -29,10 +30,11 @@ public class MonteCarloScheduler implements Scheduler {
                 tasks.add(" \" "+args[0]+" \" "+x+" "+(x+xStep)+" "+y+" "+(y+ yStep)+" "+args[5]);
             }
         }
+        this.JAR_PATH=JAR_PATH;
     }
 
     public void registered(SchedulerDriver schedulerDriver, Protos.FrameworkID frameworkID, Protos.MasterInfo masterInfo) {
-        System.out.println("Scheduler registered with id " + frameworkID.getValue());
+        System.out.println("Scheduler registered with id " + frameworkID.getValue() + " with tasks " + tasks);
     }
 
     public void reregistered(SchedulerDriver schedulerDriver, Protos.MasterInfo masterInfo) {
@@ -74,7 +76,7 @@ public class MonteCarloScheduler implements Scheduler {
     }
 
     private Protos.CommandInfo.Builder createCommand(String args){
-        return Protos.CommandInfo.newBuilder().setValue("java -cp $JAR_PATH org.packt.mesos.MonteCarloExecutor "+args);
+        return Protos.CommandInfo.newBuilder().setValue("java -cp " + JAR_PATH + " org.packt.mesos.MonteCarloExecutor "+args);
     }
 
     public void offerRescinded(SchedulerDriver schedulerDriver, Protos.OfferID offerID) {
