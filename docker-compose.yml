@@ -1,8 +1,8 @@
 zk:
-    image: mesosphere/mesos:1.2.0
+    image: mesosphere/mesos:1.3.0
     command: /usr/share/zookeeper/bin/zkServer.sh start-foreground
 master:
-    image: mesosphere/mesos-master:1.2.0
+    image: mesosphere/mesos-master:1.3.0
     environment:
         - MESOS_ZK=zk://zk:2181/mesos
         - MESOS_LOG_DIR=/var/log/mesos
@@ -15,7 +15,7 @@ master:
     volumes:
         - ./target:/tmp/bin
 slave:
-    image: mesosphere/mesos-slave:1.2.0
+    image: mesosphere/mesos-slave:1.3.0
     environment:
         - MESOS_MASTER=zk://zk:2181/mesos
         - MESOS_LOG_DIR=/var/log/mesos
